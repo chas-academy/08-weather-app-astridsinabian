@@ -5,10 +5,13 @@ const API_KEY = '8b423980340f4f09303c5e42223db539';
 
 class Weather extends Component {
 
-    constructor(props) {
-      super(props);
+    constructor() {
+      super();
       this.state = {
-        data: [],
+        weather: [],
+        currently: [],
+        hourly: [],
+        daily: [],
         isLoading: false,
         error: null
       }
@@ -19,16 +22,28 @@ class Weather extends Component {
     }
 
     fetchData() {
-        this.setState({isLoading: true});
+        this.setState({
+            isLoading: true,
+        });
 
         fetch(`https://cors-anywhere.herokuapp.com/https://api.darksky.net/forecast/${API_KEY}/42.3601,-71.0589`)
-        .then(response => response.json())
-        .then(parsedJSON => console.log(parsedJSON))
+        .then(response => {
+            if (response.ok) {
+                return response.json();
+            } else {
+                throw new Error('Something went wrong ...');
+            }
+        })
+        .then(data => this.setState({ weather: data,
+            currently: data['currently'],
+            hourly: data['hourly']['data'],
+            daily: data['daily']['data'], isLoading: false}))
+        .catch(error => console.log("Parsing failed", error))
 
-}
+};
 
     render() { 
-        const { isLoading, error } = this.state;
+        const { weather, isLoading, error } = this.state;
 
         if (error) {
             return <p>{error.message}</p>;
@@ -41,6 +56,11 @@ class Weather extends Component {
         return ( 
             <div>
                 <h3>Weather Component</h3>
+                
+                   
+                    <h5> { weather.timezone } </h5>
+                   
+               
             </div>
          );
     }

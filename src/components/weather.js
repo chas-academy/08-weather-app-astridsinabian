@@ -22,11 +22,15 @@ class Weather extends Component {
     }
 
     fetchData() {
+        navigator.geolocation.getCurrentPosition((position) => {
+            let latitude = position.coords.latitude;
+            let longitude = position.coords.longitude;
+        
         this.setState({
             isLoading: true,
         });
 
-        fetch(`https://cors-anywhere.herokuapp.com/https://api.darksky.net/forecast/${API_KEY}/42.3601,-71.0589`)
+        fetch(`https://cors-anywhere.herokuapp.com/https://api.darksky.net/forecast/${API_KEY}/${latitude},${longitude}`)
         .then(response => {
             if (response.ok) {
                 return response.json();
@@ -40,7 +44,8 @@ class Weather extends Component {
             daily: data['daily']['data'], isLoading: false}))
         .catch(error => console.log("Parsing failed", error))
 
-};
+        })
+    }
 
     render() { 
         const { weather, isLoading, error } = this.state;
@@ -56,11 +61,7 @@ class Weather extends Component {
         return ( 
             <div>
                 <h3>Weather Component</h3>
-                
-                   
                     <h5> { weather.timezone } </h5>
-                   
-               
             </div>
          );
     }

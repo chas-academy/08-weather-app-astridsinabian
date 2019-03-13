@@ -1,5 +1,10 @@
 import React, { Component } from 'react';
-
+import { Table } from 'reactstrap';
+import { Card, CardText, CardDeck, CardBody, CardHeader } from 'reactstrap';
+import { Spinner } from 'reactstrap';
+import { ListGroup, ListGroupItem, ListGroupItemHeading, ListGroupItemText } from 'reactstrap';
+import { TabContent, TabPane, Nav, NavItem, NavLink } from 'reactstrap';
+import classnames from 'classnames';
 
 const API_KEY = '8b423980340f4f09303c5e42223db539';
 
@@ -13,8 +18,20 @@ class Weather extends Component {
         hourly: [],
         daily: [],
         isLoading: false,
-        error: null
+        error: null,
+        activeTab: '1'
       }
+
+      this.toggle = this.toggle.bind(this);
+
+    }
+
+    toggle(tab) {
+        if (this.state.activeTab !== tab) {
+          this.setState({
+            activeTab: tab
+          });
+        }
     }
     
     componentDidMount() {
@@ -30,7 +47,7 @@ class Weather extends Component {
             isLoading: true,
         });
 
-        fetch(`https://cors-anywhere.herokuapp.com/https://api.darksky.net/forecast/${API_KEY}/${latitude},${longitude}`)
+        fetch(`https://cors-anywhere.herokuapp.com/https://api.darksky.net/forecast/${API_KEY}/${latitude},${longitude}?lang=sv`)
         .then(response => {
             if (response.ok) {
                 return response.json();
@@ -48,23 +65,160 @@ class Weather extends Component {
     }
 
     render() { 
-        const { weather, isLoading, error } = this.state;
+        const { weather, currently, daily, isLoading, error } = this.state;
 
         if (error) {
             return <p>{error.message}</p>;
         }
 
         if (isLoading) {
-            return <p>Loading...</p>;
+            return <Spinner type="grow" color="info" />;
         }
 
         return ( 
             <div>
-                <h3>Weather Component</h3>
-                    <h5> { weather.timezone } </h5>
+                 <Nav tabs>
+          <NavItem>
+            <NavLink
+              className={classnames({ active: this.state.activeTab === '1' })}
+              onClick={() => { this.toggle('1'); }}
+            >
+              Just nu
+            </NavLink>
+          </NavItem>
+          <NavItem>
+            <NavLink
+              className={classnames({ active: this.state.activeTab === '2' })}
+              onClick={() => { this.toggle('2'); }}
+            >
+              Veckan
+            </NavLink>
+          </NavItem>
+          <NavItem>
+            <NavLink
+              className={classnames({ active: this.state.activeTab === '3' })}
+              onClick={() => { this.toggle('3'); }}
+            >
+              5 dagar
+            </NavLink>
+          </NavItem>
+          <NavItem>
+            <NavLink
+              className={classnames({ active: this.state.activeTab === '4' })}
+              onClick={() => { this.toggle('4'); }}
+            >
+              3e timme
+            </NavLink>
+          </NavItem>
+        </Nav>
+        <TabContent activeTab={this.state.activeTab}>
+          <TabPane tabId="1">
+            
+              <ListGroup style={{margin: '30px'}}>
+                    <ListGroupItem >
+                        <ListGroupItemHeading className="text-info">Prognos för { weather.timezone }</ListGroupItemHeading>
+                            <ListGroupItemText>Temperatur: { currently.temperature } / {currently.temperature}</ListGroupItemText>
+                            <ListGroupItemText>Luftfuktighet: { currently.humidity }</ListGroupItemText>
+                            <ListGroupItemText>Vindstyrka: { daily.windSpeed } </ListGroupItemText>
+                            <ListGroupItemText>Soluppgång: <time>{ daily.sunriseTime }</time></ListGroupItemText>
+                            <ListGroupItemText>Solnedgång: { daily.sunsetTime }</ListGroupItemText>
+                    </ListGroupItem>
+                </ListGroup>
+          </TabPane>
+          <TabPane tabId="2">
+          <h4 style={{margin: '30px', textAlign: 'center'}} className="text-info">Prognos för en vecka</h4>
+            <ListGroup>
+                <ListGroupItem>Cras justo odio</ListGroupItem>
+                <ListGroupItem>Dapibus ac facilisis in</ListGroupItem>
+                <ListGroupItem>Morbi leo risus</ListGroupItem>
+                <ListGroupItem>Porta ac consectetur ac</ListGroupItem>
+                <ListGroupItem>Vestibulum at eros</ListGroupItem>
+            </ListGroup>
+          </TabPane>
+          <TabPane tabId="3">
+          <h4 style={{margin: '30px', textAlign: 'center'}} className="text-info">Prognos för 5 dagar</h4>
+    <CardDeck style={{margin: '30px'}}>
+    <Card>
+        <CardHeader className="text-info">Dag</CardHeader>
+        <CardBody>
+          <CardText>This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</CardText>
+        </CardBody>
+      </Card>
+      <Card>
+        <CardHeader className="text-info">Dag</CardHeader>
+        <CardBody>
+          <CardText>This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</CardText>
+        </CardBody>
+      </Card>
+      <Card>
+        <CardHeader className="text-info">Dag</CardHeader>
+        <CardBody>
+          <CardText>This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</CardText>
+        </CardBody>
+      </Card>
+      <Card>
+        <CardHeader className="text-info">Dag</CardHeader>
+        <CardBody>
+          <CardText>This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</CardText>
+        </CardBody>
+      </Card>
+      <Card>
+        <CardHeader className="text-info">Dag</CardHeader>
+        <CardBody>
+          <CardText>This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</CardText>
+        </CardBody>
+      </Card>
+    </CardDeck>
+          </TabPane>
+          <TabPane tabId="4">
+          <h4 style={{margin: '30px', textAlign: 'center'}} className="text-info">Prognos för 3 timmar för nuvarande dygn</h4>
+            <Table responsive>
+        <thead>
+          <tr>
+            <th className="text-info">Timme</th>
+            <th className="text-info">Temperatur</th>
+            <th className="text-info">Vindstyrka</th>
+            <th className="text-info">Luftfuktighet</th>
+            <th className="text-info">Soluppgång</th>
+            <th className="text-info">Solnedgång</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th scope="row">1</th>
+            <td>Table cell</td>
+            <td>Table cell</td>
+            <td>Table cell</td>
+            <td>Table cell</td>
+            <td>Table cell</td>
+          </tr>
+          <tr>
+            <th scope="row">2</th>
+            <td>Table cell</td>
+            <td>Table cell</td>
+            <td>Table cell</td>
+            <td>Table cell</td>
+            <td>Table cell</td>
+          </tr>
+          <tr>
+            <th scope="row">3</th>
+            <td>Table cell</td>
+            <td>Table cell</td>
+            <td>Table cell</td>
+            <td>Table cell</td>
+            <td>Table cell</td>
+          </tr>
+        </tbody>
+      </Table>
+          </TabPane>
+        </TabContent>
+
             </div>
          );
     }
+
+  
+
 }
  
 export default Weather;

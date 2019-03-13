@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 
 import Top from './components/top.js';
-import Form from './components/form.js';
 import Weather from './components/weather.js';
+
 
 
 class App extends Component {
@@ -12,7 +12,6 @@ class App extends Component {
     return ( 
         <div>
           <Top />
-          <Form />
           <Weather />
         </div>
      );

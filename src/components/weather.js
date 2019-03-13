@@ -65,7 +65,7 @@ class Weather extends Component {
     }
 
     render() { 
-        const { weather, currently, daily, isLoading, error } = this.state;
+        const { weather, currently, isLoading, error } = this.state;
 
         if (error) {
             return <p>{error.message}</p>;
@@ -116,12 +116,11 @@ class Weather extends Component {
             
               <ListGroup style={{margin: '30px'}}>
                     <ListGroupItem >
-                        <ListGroupItemHeading className="text-info">Prognos för { weather.timezone }</ListGroupItemHeading>
-                            <ListGroupItemText>Temperatur: { currently.temperature } / {currently.temperature}</ListGroupItemText>
-                            <ListGroupItemText>Luftfuktighet: { currently.humidity }</ListGroupItemText>
-                            <ListGroupItemText>Vindstyrka: { daily.windSpeed } </ListGroupItemText>
-                            <ListGroupItemText>Soluppgång: <time>{ daily.sunriseTime }</time></ListGroupItemText>
-                            <ListGroupItemText>Solnedgång: { daily.sunsetTime }</ListGroupItemText>
+                        <ListGroupItemHeading className="text-info" style={{paddingBottom: '15px'}}>Prognos för { weather.timezone }</ListGroupItemHeading>
+                        <ListGroupItemText><i> { currently.summary } </i></ListGroupItemText>
+                        <ListGroupItemText>Temperatur: { Math.round((currently.temperature - 32) * 5/9) } °C / { Math.round(currently.temperature) } °F </ListGroupItemText>
+                        <ListGroupItemText>Luftfuktighet: { currently.humidity * 100 } %</ListGroupItemText>
+                        <ListGroupItemText>Vindstyrka: { currently.windSpeed } m/s </ListGroupItemText>
                     </ListGroupItem>
                 </ListGroup>
           </TabPane>

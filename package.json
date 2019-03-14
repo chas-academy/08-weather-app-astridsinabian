@@ -6,7 +6,9 @@
     "bootstrap": "^4.3.1",
     "react": "^16.8.4",
     "react-dom": "^16.8.4",
+    "react-icons": "^3.5.0",
     "react-scripts": "2.1.8",
+    "react-skycons": "^0.7.0",
     "react-timestamp": "^4.4.0",
     "reactstrap": "^7.1.0"
   },

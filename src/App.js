@@ -2,8 +2,7 @@ import React, { Component } from 'react';
 
 import Top from './components/top.js';
 import Weather from './components/weather.js';
-
-
+import Bottom from './components/bottom';
 
 class App extends Component {
 
@@ -13,6 +12,7 @@ class App extends Component {
         <div>
           <Top />
           <Weather />
+          <Bottom />
         </div>
      );
   }

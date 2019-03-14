@@ -7,6 +7,7 @@ import { TabContent, TabPane, Nav, NavItem, NavLink } from 'reactstrap';
 import classnames from 'classnames';
 
 const API_KEY = '8b423980340f4f09303c5e42223db539';
+const Timestamp = require('react-timestamp');
 
 class Weather extends Component {
 
@@ -65,7 +66,7 @@ class Weather extends Component {
     }
 
     render() { 
-        const { weather, currently, isLoading, error } = this.state;
+        const { weather, currently, daily, hourly, isLoading, error } = this.state;
 
         if (error) {
             return <p>{error.message}</p>;
@@ -117,7 +118,7 @@ class Weather extends Component {
               <ListGroup style={{margin: '30px'}}>
                     <ListGroupItem >
                         <ListGroupItemHeading className="text-info" style={{paddingBottom: '15px'}}>Prognos för { weather.timezone }</ListGroupItemHeading>
-                        <ListGroupItemText><i> { currently.summary } </i></ListGroupItemText>
+                        <ListGroupItemText><i>{ currently.summary }</i></ListGroupItemText>
                         <ListGroupItemText>Temperatur: { Math.round((currently.temperature - 32) * 5/9) } °C / { Math.round(currently.temperature) } °F </ListGroupItemText>
                         <ListGroupItemText>Luftfuktighet: { currently.humidity * 100 } %</ListGroupItemText>
                         <ListGroupItemText>Vindstyrka: { currently.windSpeed } m/s </ListGroupItemText>
@@ -127,50 +128,41 @@ class Weather extends Component {
           <TabPane tabId="2">
           <h4 style={{margin: '30px', textAlign: 'center'}} className="text-info">Prognos för en vecka</h4>
             <ListGroup>
-                <ListGroupItem>Cras justo odio</ListGroupItem>
-                <ListGroupItem>Dapibus ac facilisis in</ListGroupItem>
-                <ListGroupItem>Morbi leo risus</ListGroupItem>
-                <ListGroupItem>Porta ac consectetur ac</ListGroupItem>
-                <ListGroupItem>Vestibulum at eros</ListGroupItem>
+                { daily.map(day => 
+                <ListGroupItem> 
+                  Temperatur: { Math.round((day.temperatureHigh - 32) * 5/9) } °C / { Math.round(day.temperatureHigh) } °F
+                  Vindstyrka: { day.windSpeed } m/s
+                  Luftfuktighet: { day.humidity * 100 } %
+                  Soluppgång: <Timestamp time={ day.sunriseTime } format='full' />
+                  Solnedgång: <Timestamp time={ day.sunsetTime } format='full' />
+                </ListGroupItem> 
+                )}
             </ListGroup>
           </TabPane>
           <TabPane tabId="3">
           <h4 style={{margin: '30px', textAlign: 'center'}} className="text-info">Prognos för 5 dagar</h4>
+    
     <CardDeck style={{margin: '30px'}}>
-    <Card>
-        <CardHeader className="text-info">Dag</CardHeader>
+    { daily.map( day => 
+    <Card>  
+        <CardHeader className="text-info"><Timestamp time={ day.time } format='full' /></CardHeader>
         <CardBody>
-          <CardText>This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</CardText>
+          <CardText>
+              Temperatur: { Math.round((day.temperatureHigh - 32) * 5/9) } °C / { Math.round(day.temperatureHigh) } °F
+              Vindstyrka: { day.windSpeed } m/s
+              Luftfuktighet: { day.humidity * 100 } %
+              Soluppgång: <Timestamp time={ day.sunriseTime } format='time' />
+              Solnedgång: <Timestamp time={ day.sunsetTime } format='time' />
+          </CardText>
         </CardBody>
       </Card>
-      <Card>
-        <CardHeader className="text-info">Dag</CardHeader>
-        <CardBody>
-          <CardText>This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</CardText>
-        </CardBody>
-      </Card>
-      <Card>
-        <CardHeader className="text-info">Dag</CardHeader>
-        <CardBody>
-          <CardText>This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</CardText>
-        </CardBody>
-      </Card>
-      <Card>
-        <CardHeader className="text-info">Dag</CardHeader>
-        <CardBody>
-          <CardText>This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</CardText>
-        </CardBody>
-      </Card>
-      <Card>
-        <CardHeader className="text-info">Dag</CardHeader>
-        <CardBody>
-          <CardText>This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</CardText>
-        </CardBody>
-      </Card>
+       ).slice(0, 5)}
     </CardDeck>
           </TabPane>
+
           <TabPane tabId="4">
           <h4 style={{margin: '30px', textAlign: 'center'}} className="text-info">Prognos för 3 timmar för nuvarande dygn</h4>
+          
             <Table responsive>
         <thead>
           <tr>
@@ -178,36 +170,18 @@ class Weather extends Component {
             <th className="text-info">Temperatur</th>
             <th className="text-info">Vindstyrka</th>
             <th className="text-info">Luftfuktighet</th>
-            <th className="text-info">Soluppgång</th>
-            <th className="text-info">Solnedgång</th>
           </tr>
         </thead>
+        { hourly.map( hour => 
         <tbody>
           <tr>
-            <th scope="row">1</th>
-            <td>Table cell</td>
-            <td>Table cell</td>
-            <td>Table cell</td>
-            <td>Table cell</td>
-            <td>Table cell</td>
-          </tr>
-          <tr>
-            <th scope="row">2</th>
-            <td>Table cell</td>
-            <td>Table cell</td>
-            <td>Table cell</td>
-            <td>Table cell</td>
-            <td>Table cell</td>
-          </tr>
-          <tr>
-            <th scope="row">3</th>
-            <td>Table cell</td>
-            <td>Table cell</td>
-            <td>Table cell</td>
-            <td>Table cell</td>
-            <td>Table cell</td>
+            <th scope="row"><Timestamp time={ hour.time } format='time' /></th>
+            <td>{ Math.round((hour.temperature - 32) * 5/9) } °C / { Math.round(hour.temperature) } °F </td>
+            <td>{ hour.windSpeed } m/s</td>
+            <td>{ hour.humidity * 100 } %</td>
           </tr>
         </tbody>
+           ).slice(0, 3)}
       </Table>
           </TabPane>
         </TabContent>

@@ -1,5 +1,5 @@
 ## Weather app assignment
-www.astridsinabian.se/weather-app
+https://www.astridsinabian.se/weather-app
 
 ----
 

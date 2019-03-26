@@ -78,7 +78,12 @@ class Weather extends Component {
             daily: data['daily']['data'], isLoading: false}))
         .catch(error => console.log("Parsing failed", error))
 
-        })
+        },
+        (error) => alert(`${error.message}
+        
+This application requires that you Allow your position, please change from Block to Allow in settings. 
+
+Guide: https://www.kevinleary.net/reset-geolocation-prompt-google-chrome/`))
     }
 
     render() { 
